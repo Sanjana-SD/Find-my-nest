@@ -1,12 +1,21 @@
-export default function Home() {
+import { redirect } from 'next/navigation'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import Hero from '@/components/hero'
+import FeaturedProperties from '@/components/featured-properties'
+
+export const metadata = {
+  title: 'Find My Nest - Discover Your Perfect Rental Home',
+  description: 'Find the perfect rental property with our comprehensive search platform',
+}
+
+export default async function Home() {
+  const session = await auth.api.getSession({ headers: await headers() })
+
   return (
-    <main className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Find My Nest</h1>
-        <p className="text-gray-600">
-          Find your perfect rental home today!
-        </p>
-      </div>
-    </main>
-  );
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <Hero isLoggedIn={!!session?.user} />
+      <FeaturedProperties />
+    </div>
+  )
 }
